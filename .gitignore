@@ -131,3 +131,6 @@ dmypy.json
 env
 .DS_Store
 aiotests
+archive
+cython
+futures
