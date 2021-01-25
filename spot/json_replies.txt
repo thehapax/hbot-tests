@@ -1,0 +1,17 @@
+ python3 limit_order.py
+Keypair:
+{'API-KEY': '566a244ae8c3a23582b2acc8b3c100ccc395b77349f59f11e8295bbf70731514', 'API-PASSPHRASE': '62f8565c76bd11a111c4c6c8fe3ac89c54cddf4b3045516edb57934baa0965df'}
+nonce:1598514476455
+[{"status":2,"symbol":"BTC-USD","orderType":76,"price":7010.0,"side":"BUY","size":0.002,"orderID":"14e87dca-6eb7-40e1-b0f0-d590121c207e","timestamp":1598514497006,"triggerPrice":0.0,"stopPrice":null,"trigger":false,"message":"","averageFillPrice":0.0,"fillSize":0.0,"clOrderID":"","stealth":1.0,"deviation":1.0}]
+(env) CMBR:spot octo$ python3 market_order.py
+Keypair:
+{'API-KEY': '566a244ae8c3a23582b2acc8b3c100ccc395b77349f59f11e8295bbf70731514', 'API-PASSPHRASE': '62f8565c76bd11a111c4c6c8fe3ac89c54cddf4b3045516edb57934baa0965df'}
+nonce:1598514480598
+[{"status":4,"symbol":"BTC-USD","orderType":77,"price":11100.0,"side":"BUY","size":22.2,"orderID":"994931d7-8fcb-4dd2-a82d-1729d3d7a7eb","timestamp":1598514501527,"triggerPrice":0.0,"stopPrice":null,"trigger":false,"message":"","averageFillPrice":11100.0,"fillSize":0.002,"clOrderID":"","stealth":1.0,"deviation":1.0}]
+(env) CMBR:spot octo$ python3 open_orders.py
+Keypair:
+{'API-KEY': '566a244ae8c3a23582b2acc8b3c100ccc395b77349f59f11e8295bbf70731514', 'API-PASSPHRASE': '62f8565c76bd11a111c4c6c8fe3ac89c54cddf4b3045516edb57934baa0965df'}
+nonce:1598514485274
+https://testapi.btse.io/spot/api/v3.1/user/open_orders
+[{"orderType":76,"price":7010.0,"size":0.002,"side":"BUY","orderValue":14.02,"filledSize":0.0,"pegPriceMin":0.0,"pegPriceMax":0.0,"pegPriceDeviation":0.0,"cancelDuration":0,"timestamp":1598514497006,"orderID":"14e87dca-6eb7-40e1-b0f0-d590121c207e","triggerOrder":false,"triggerPrice":0.0,"triggerOriginalPrice":0.0,"triggerOrderType":0,"triggerTrailingStopDeviation":0.0,"triggerStopPrice":0.0,"symbol":"BTC-USD","trailValue":0.0,"averageFillPrice":0.0,"fillSize":0.0,"clOrderID":null,"orderState":"STATUS_ACTIVE","triggered":false}]
+(env) CMBR:spot octo$

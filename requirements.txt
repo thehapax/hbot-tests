@@ -1,0 +1,5 @@
+requests==2.22.0
+websockets==8.1
+aiohttp
+asyncio
+ujson
