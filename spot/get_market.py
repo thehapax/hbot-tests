@@ -140,7 +140,7 @@ if __name__ == '__main__':
   print(f'params: {params}\n')
   size = 0.05  # this is the size of the order to be placed on exchange.
   get_one_market(params, size)
-  get_all_markets()
+  get_all_markets(size)
 
 
 
