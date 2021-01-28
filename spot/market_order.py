@@ -17,6 +17,7 @@ from btseauth_spot import make_headers, BTSE_Endpoint
  {"errorCode":400,"message":"BADREQUEST: Size and Price should not be mixed","status":400}
 
 '''
+## hummingbot does not use market orders, only limit orders?
 
 ## Place a market order
 mkt_order_form = {

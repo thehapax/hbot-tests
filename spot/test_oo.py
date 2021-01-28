@@ -20,52 +20,9 @@ from typing import (
     Dict,
 )
 
-####
-price = 574.1500000000000253769227854
-price = Decimal('%.7g' % price)
-limit_order_form = {"symbol": "ETH-USDT", 
-                    "side": "BUY", "type": "LIMIT",
-                     "price": f"{price:f}", 
-                     "size": "0.09800000000000000204003480775", 
-                     "triggerPrice": 0, "time_in_force": "GTC", 
-                     "txType": "LIMIT", "clOrderID": "buy-ETH-USDT-1604374232705551"}
 
 limit_path = '/api/v3.2/order'
 limit_url = BTSE_Endpoint+path
-
-'''
-limit_order_form = {"symbol": "ETH-USDT", 
-                    "side": "BUY", "type": "LIMIT",
-                     "price": "574.150000", 
-                     "size": "0.0980775", 
-                     "triggerPrice": 0, 
-                     "time_in_force": "GTC", 
-                     "txType": "LIMIT", 
-                     "clOrderID": "buy-ETH-USDT-1604374232705551"}
-'''
-
-
-'''
-limit_order_form = {'symbol': 'BTC-USDT', 'side': 'BUY', 'type': 'LIMIT', 
-                    'price': '17038.5', 
-                    'size': '0.000123456', 
-                    'triggerPrice': 0, 'time_in_force': 'GTC', 
-                    'txType': 'LIMIT', 'clOrderID': 'buy-BTC-USDT-1606019854008947'}
-
-limit_order_form = {"symbol": "BTC-USDT", "side": "BUY", "type": "LIMIT", 
-                    "price": "17038.5", "size": "0.123 ", "triggerPrice": 0, 
-                    "time_in_force": "GTC", "txType": "LIMIT", 
-                    "clOrderID": "buy-BTC-USDT-1606020895015706"}
-'''
-'''
-limit_order_form = {"symbol": "BTC-USDT", 
-                    "side": "BUY",
-                    "type": "LIMIT",
-                    "price": "18038.5",
-                    "size": "0.012",
-                    "clOrderID": "buy-BTC-USDT-1606020895015706"}
-'''
-
 
 ts = int(time.time())
 clientOID = "buy-BTC-USDT-" + str(ts)
@@ -180,7 +137,7 @@ async def run(r):
         print(f'length of responses: {len(responses)} \n\n')
         print(responses)
         # cancel all open orders
-        await cancel_all_orders(session, responses)
+#        await cancel_all_orders(session, responses)
         await session.close()
 
 
@@ -190,7 +147,6 @@ loop.run_until_complete(future)
 
 
 # get_openorders: https://testapi.btse.io/spot/api/v3.2/user/open_orders 
-
 
 '''
     async def fetch(url, session):

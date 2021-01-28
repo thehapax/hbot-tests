@@ -4,70 +4,10 @@ import aiohttp, asyncio
 from decimal import Decimal
 from utils import get_status_msg
 from btseauth_spot import BTSE_Endpoint, make_headers, get_tracking_nonce
-
 import time 
 
 # this script works on testnet
 # uses REST api v3.1
-
-## Place a limit order with price at 7010
-'''
-limit_order_form = {
-  "price": 7050,
-  "side": "BUY",
-  "size": 0.002,
-  "symbol": "BTC-USDT",
-  "time_in_force": "GTC",
-  "triggerPrice": 0,
-  "txType": "LIMIT",
-  "type": "LIMIT",
-  "clOrderID": "MYOWNORDERID2",
-}
-'''
-
-limit_order_form = {'symbol': 'BTC-USDT', 'side': 'SELL', 
-                    'type': 'LIMIT', 'price': '13318.5', 
-                    'size': '0.008000000000000000166533453694', 
-                    'triggerPrice': 0, 'time_in_force': 'GTC', 
-                    'txType': 'LIMIT', 
-                    'clOrderID': 'sell-BTC-USDT-1604346826637811'}
-limit_order_form = {'symbol': 'BTC-USD', 'side': 'BUY', 
-                    'type': 'LIMIT', 'price': '10418.5', 
-                    'size': '0.4980000000000000103667074924', 
-                    'triggerPrice': 0, 'time_in_force': 'GTC', 
-                    'txType': 'LIMIT', 'clOrderID': 'buy-BTC-USD-1604360430004315'}
-limit_order_form = {"symbol": "ETH-USDT", "side": "SELL","type": "LIMIT", 
-                    "price": "457.1500000000000253769227854",
-                     "size": "0.09800000000000000204003480775",
-                      "triggerPrice": 0, "time_in_force": "GTC", 
-                      "txType": "LIMIT", 
-                      "clOrderID": "sell-ETH-USDT-1604374232705617"}
-
-price = 357.1500000000000253769227854
-price = Decimal('%.7g' % price)
-
-limit_order_form = {"symbol": "ETH-USDT", "side": "BUY", "type": "LIMIT",
-                     "price": f"{price:f}", 
-                     "size": "0.09800000000000000204003480775", 
-                     "triggerPrice": 0, "time_in_force": "GTC", 
-                     "txType": "LIMIT", "clOrderID": "buy-ETH-USDT-1604374232705551"}
-
-
-limit_order_form = {"symbol": "BTC-USDT", 
-                    "side": "BUY", 
-                    "type": "LIMIT", 
-                    "price": "18637.8",
-                    "size": "0.012", 
-                    "triggerPrice": 0,
-                    "time_in_force": "GTC", 
-                    "txType": "LIMIT", 
-                    "clOrderID": "buy-BTC-USDT-1606020895015706"}
-
-limit_order_form = {"symbol": "BTC-USDT", 
-                    "side": "BUY", 
-                    "type": "LIMIT", 
-                    "price": "18637.8",
-                    "size": "0.012" }
 
 r_bid_price = 15487.5
 r_amount = 0.012
@@ -147,7 +87,7 @@ if __name__ == '__main__':
 
 
 '''
-repsonse: 
+sample repsonse: 
 
 nonce:1601499116289
 

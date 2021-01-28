@@ -15,12 +15,14 @@ pp = pprint.PrettyPrinter(indent=4)
 ########################################
 price = 357.1500000000000253769227854
 price = Decimal('%.7g' % price)
+
 limit_order_form = {"symbol": "ETH-USDT", "side": "BUY", "type": "LIMIT",
                      "price": f"{price:f}", 
                      "size": "0.09800000000000000204003480775", 
                      "triggerPrice": 0, "time_in_force": "GTC", 
                      "txType": "LIMIT", "clOrderID": "buy-ETH-USDT-1604374232705551"}
 limit_path = 'order'
+
 open_order_params = {'symbol': 'ETH-USDT'}
 open_path = 'user/open_orders'
 
@@ -46,20 +48,5 @@ loop.run_until_complete(main())
 loop.run_until_complete(asyncio.sleep(0.250))
 loop.close()
 
-
-
-'''
-async def read_website():
-    async with aiohttp.ClientSession() as session:
-        async with session.get('http://example.org/') as resp:
-            return await resp.read()
-
-loop = asyncio.get_event_loop()
-loop.run_until_complete(read_website())
-# 0.250-sleep to allow underlying connections to close
-loop.run_until_complete(asyncio.sleep(0.250))
-loop.close()
-
-'''
 
 
