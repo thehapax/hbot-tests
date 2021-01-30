@@ -49,20 +49,21 @@ def round_nearest(x, a):
 def adjust_increment(info, price, size):
     minsizeinc = info['minSizeIncrement']
     minpriceinc = info['minPriceIncrement']
-    print(f'\nMin Price Increment: {minpriceinc}')
+    # print(f'\nMin Price Increment: {minpriceinc}')
     
     adjusted_price = round_nearest(price, minpriceinc)
-    print(f'>> Adjusted Price : {adjusted_price}')
+    # print(f'>> Adjusted Price : {adjusted_price}')
  
-    print(f'\nMin Size Increment: {minsizeinc}')   
+    # print(f'\nMin Size Increment: {minsizeinc}')   
     adjusted_size = round_up(size, minsizeinc)
-    print(f'>> Adjusted Size: {adjusted_size}')
+    # print(f'>> Adjusted Size: {adjusted_size}')
+    
     return adjusted_price, adjusted_size
     
 
 # Calculate size for order within btse exchange bounds
 def bounded_size(adjusted_size, minsize, maxsize):
-  print(f"\nExchange Minsize {minsize}, Maxsize {maxsize}")
+  # print(f"\nExchange Minsize {minsize}, Maxsize {maxsize}")
   if adjusted_size < maxsize and adjusted_size > minsize:
         print("adjusted size within bounds, ok")
         return adjusted_size
@@ -78,31 +79,29 @@ def get_market(params):
   r = requests.get(BTSE_Endpoint+'/api/v3.2/market_summary', params=params, headers = headers)
   return r
 
-
+# for testing get one market size and price based on avg market price
 def get_one_market(params, size):
   mkt = get_market(params)
   mkt_info = mkt.json()
-  
   info = mkt_info[0]
-  pp.pprint(info)
+  minsize = info['minOrderSize']
+  maxsize = info['maxOrderSize']
 
   lAsk = info['lowestAsk']
   hBid = info['highestBid'] 
-  symbol = info['symbol']
-
+  # symbol = info['symbol']
+  
   # Example: take the average of low Ask and high Bid for your new limit order
+  # if you want to set a price otherwise, skip this. 
   price = (lAsk + hBid)/2
   
   adjusted_price, adjusted_size = adjust_increment(info, price, size)
-  
-  minsize = info['minOrderSize']
-  maxsize = info['maxOrderSize']
   final_size = bounded_size(adjusted_size, minsize, maxsize)
 
-  print(f'\n >>> Symbol: {symbol},\n Order Size desired: {size}')
-  print(f'\n lowest Ask {lAsk}, highest Bid: {hBid}')  
-  print(f'\nadjusted price {adjusted_price}, adjusted size {final_size}, pre-adjusted size {adjusted_size}')
-  print("==============================")
+  # pp.pprint(info)
+  # print(f'\n Symbol: {symbol} lowest Ask {lAsk}, highest Bid: {hBid}')
+  # print(f'pre-adjusted size {adjusted_size}')
+
   return adjusted_price, final_size
 
   
@@ -135,17 +134,24 @@ def get_all_markets(size):
 
 
 if __name__ == '__main__':
-  #params = {'symbol': 'ETH-USDT'}
-  params = {'symbol': 'BTC-USDT'}
-  print(f'params: {params}\n')
-  size = 0.05  # this is the size of the order to be placed on exchange.
-  get_one_market(params, size)
-  get_all_markets(size)
+
+  size = 0.05  # this is the size of the order we would like to place on exchange.
+  symbol = 'BTC-USDT'
+
+  params = {'symbol': f'{symbol}'}  
+  adjusted_price, final_size =  get_one_market(params, size)
+  
+  print(f'\n >>> Symbol: {symbol},\n ')
+  print(f'params: {params}, Order Size Desired: {size} \n')
+  print(f'\nadjusted price {adjusted_price}, adjusted size {final_size}')
+  print("==============================")
+  
+  # get all market information and adjust price and size to within btse bounds
+  # get_all_markets(size)
 
 
 
-#################
-
+####################################################################
 # min order size
 # min size increment at 0.001 - 3 digits
 # minPriceIncrement - important that price increment in these intervals of 0.5 only
@@ -157,6 +163,7 @@ if __name__ == '__main__':
 # 'quote': 'USDT'
 #  minsizeinc = 0.05
 #  minpriceinc = 1e-08
+#################
 
 '''
 from market exchange crypto.com example

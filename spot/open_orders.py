@@ -83,11 +83,6 @@ async def get_openorders(client, url, params):
 
 
 async def main():
-    #    this line below causes 'FORBIDDEN: Signature is incorrect'
-    #    headers = make_headers(path, json.dumps(open_order_params))
-    # ----- 
-    #    this line below causes TypeError: can only concatenate str (not "dict") to str
-    #    headers = make_headers(path, open_order_params)
 
     print(f'PARAMS: {open_order_params}\n') 
 
@@ -232,10 +227,11 @@ EXAMPLE RESPONSE for open orders: 10/10/2020
         'triggerStopPrice': 0.0,
         'triggerTrailingStopDeviation': 0.0,
         'triggered': False}]
-
-
-
-
 '''
 
-
+### old errors
+    #    this line below causes 'FORBIDDEN: Signature is incorrect'
+    #    headers = make_headers(path, json.dumps(open_order_params))
+    # ----- 
+    #    this line below causes TypeError: can only concatenate str (not "dict") to str
+    #    headers = make_headers(path, open_order_params)

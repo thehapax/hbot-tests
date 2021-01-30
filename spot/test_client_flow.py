@@ -9,18 +9,25 @@ from btseauth_spot import BTSE_Endpoint, make_headers
 from access_methods import BtseEx # get_openorders, limit_order, del_order
 from decimal import Decimal
 from async_utils import safe_gather
+import time
 
 pp = pprint.PrettyPrinter(indent=4)
 
 ########################################
-price = 357.1500000000000253769227854
-price = Decimal('%.7g' % price)
+#price = 357.1500000000000253769227854
+#price = Decimal('%.7g' % price)
 
-limit_order_form = {"symbol": "ETH-USDT", "side": "BUY", "type": "LIMIT",
+ts = int(time.time())
+symbol = "ETH-USDT"
+clientOID = f"buy-{symbol}-" + str(ts)
+price = 18038.5
+
+
+limit_order_form = {"symbol": f'{symbol}', "side": "BUY", "type": "LIMIT",
                      "price": f"{price:f}", 
                      "size": "0.09800000000000000204003480775", 
                      "triggerPrice": 0, "time_in_force": "GTC", 
-                     "txType": "LIMIT", "clOrderID": "buy-ETH-USDT-1604374232705551"}
+                     "txType": "LIMIT", "clOrderID": f'{clientOID}'}
 limit_path = 'order'
 
 open_order_params = {'symbol': 'ETH-USDT'}

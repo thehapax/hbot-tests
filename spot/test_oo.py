@@ -20,24 +20,25 @@ from typing import (
     Dict,
 )
 
-
 limit_path = '/api/v3.2/order'
 limit_url = BTSE_Endpoint+path
 
 ts = int(time.time())
-clientOID = "buy-BTC-USDT-" + str(ts)
+symbol = "BTC-USDT"
+clientOID = f"buy-{symbol}-" + str(ts)
+
+price = 18038.5
 
 limit_order_form = {"symbol": "BTC-USDT",
                     "side": "BUY", 
                     "type": "LIMIT", 
-                    "price": "18038.5", 
+                    "price": f"{price}", 
                     "size": "0.012", 
                     "time_in_force": "GTC", 
                     "txType": "LIMIT", 
                     "clOrderID": f"{clientOID}"}
 
-
-###
+#######
 cancel_path = '/api/v3.2/order'
 
 # use these dicts for deletion of open orders
@@ -49,6 +50,7 @@ def get_cancelparams(trade_msg: Dict[str, any]):
         info = {'symbol': symbol, 'orderID': oid}
         pairs.append(info)
     return pairs
+
 
 async def get_openorders(client, path, params):
     try:
@@ -95,6 +97,7 @@ async def cancel_orders(client,
     except Exception as e:
         print(e)
 
+
 async def cancel_all_orders(session, responses):
     for r in responses:
         print(r[0]['orderType'])
@@ -127,17 +130,18 @@ async def place_orders():
 
 
 async def run(r):
-    # place 2 limit orders, get open orders, cancel all open orders
+    # place 2 limit orders, get all open orders, cancel all open orders
     tasks = []
     await place_orders()
     async with aiohttp.ClientSession() as session:
+        # get all open orders, including the two above
         task = asyncio.ensure_future(get_openorders(client=session, path=path, params=open_order_params))
         tasks.append(task)
         responses = await asyncio.gather(*tasks)
         print(f'length of responses: {len(responses)} \n\n')
         print(responses)
         # cancel all open orders
-#        await cancel_all_orders(session, responses)
+        await cancel_all_orders(session, responses)
         await session.close()
 
 
