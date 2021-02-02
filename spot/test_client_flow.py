@@ -20,7 +20,7 @@ pp = pprint.PrettyPrinter(indent=4)
 ts = int(time.time())
 symbol = "ETH-USDT"
 clientOID = f"buy-{symbol}-" + str(ts)
-price = 18038.5
+price = 1110.5
 
 
 limit_order_form = {"symbol": f'{symbol}', "side": "BUY", "type": "LIMIT",
@@ -34,7 +34,7 @@ open_order_params = {'symbol': 'ETH-USDT'}
 open_path = 'user/open_orders'
 
 cancel_path = 'order'
-cancel_params = {'orderID':'49145e7e-d98c-4a9c-b73f-e1ff446dd930',
+cancel_params = {"clOrderID": f'{clientOID}',
                  'symbol':'ETH-USDT'}
 
 

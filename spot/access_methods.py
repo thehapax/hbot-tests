@@ -121,7 +121,8 @@ class BtseEx():
                     
             elif method == "delete":
                 print(f"\n INSIDE DELETE order. {url}, params: {params}, headers: {headers}\n")
-                async with client.delete(url, params=params, headers=headers) as response:
+                async with client.request('delete', url=url, params=params, headers=headers) as response:
+                # async with client.delete(url, params=params, headers=headers) as response:
                     result = await response.text()
                     print(f"\n DELETE response: {result}")
 

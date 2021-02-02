@@ -65,19 +65,22 @@ def adjust_increment(info, price, size):
 def bounded_size(adjusted_size, minsize, maxsize):
   # print(f"\nExchange Minsize {minsize}, Maxsize {maxsize}")
   if adjusted_size < maxsize and adjusted_size > minsize:
-        print("adjusted size within bounds, ok")
+        # print("adjusted size within bounds, ok")
         return adjusted_size
   elif adjusted_size <= minsize:
-        print("make minsize adjusted size")
+        # print("make minsize adjusted size")
         return minsize
   elif adjusted_size >= maxsize:
-        print("make adjusted_size maxsize")
+        # print("make adjusted_size maxsize")
         return maxsize
 
 
 def get_market(params):
   r = requests.get(BTSE_Endpoint+'/api/v3.2/market_summary', params=params, headers = headers)
   return r
+
+
+#############################################
 
 # for testing get one market size and price based on avg market price
 def get_one_market(params, size):
@@ -136,7 +139,7 @@ def get_all_markets(size):
 if __name__ == '__main__':
 
   size = 0.05  # this is the size of the order we would like to place on exchange.
-  symbol = 'BTC-USDT'
+  symbol = 'ETH-USDT'
 
   params = {'symbol': f'{symbol}'}  
   adjusted_price, final_size =  get_one_market(params, size)
@@ -163,7 +166,7 @@ if __name__ == '__main__':
 # 'quote': 'USDT'
 #  minsizeinc = 0.05
 #  minpriceinc = 1e-08
-#################
+####################################################################
 
 '''
 from market exchange crypto.com example

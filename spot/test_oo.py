@@ -11,8 +11,9 @@ import time
  through. In addition the test methods here cover asyncio
 '''
 
+symbol = 'ETH-USDT'
 BTSE_Endpoint = 'https://testapi.btse.io/spot'
-open_order_params = {'symbol': 'BTC-USDT'}
+open_order_params = {'symbol': f'{symbol}'}
 path = '/api/v3.2/user/open_orders'
 url = BTSE_Endpoint+path
 
@@ -132,7 +133,7 @@ async def place_orders():
 async def run(r):
     # place 2 limit orders, get all open orders, cancel all open orders
     tasks = []
-    await place_orders()
+#    await place_orders()
     async with aiohttp.ClientSession() as session:
         # get all open orders, including the two above
         task = asyncio.ensure_future(get_openorders(client=session, path=path, params=open_order_params))
