@@ -6,6 +6,7 @@ from typing import (
     Dict,
 )
 from btseauth_spot import BTSE_Endpoint, make_headers
+import sys
 #from utils import is_json
 
 '''
@@ -23,8 +24,12 @@ url = BTSE_Endpoint+path
 print(f'url: {url}')
 
 pp = pprint.PrettyPrinter(indent=4)
-# open_order_params = {'symbol': 'ETH-USDT'}
-open_order_params = {'symbol': 'BTC-USDT'}
+
+symbol = 'ETH-USDT'
+open_order_params = {'symbol': f'{symbol}'}
+# open_order_params = {'symbol': 'BTC-USDT'}
+
+# Other Examples
 # open_order_params = {'symbol': 'BTC-USDT', 'orderID': 'd79e9511-4139-4cae-b020-8309f3658d89'}
 # open_order_params = {'clOrderID': 'buy-BTC-USDT-1606020895015706'}
 # --> ## open_order_params = {'symbol': 'BTC-USDT', 'clOrderID': 'buy-BTC-USDT-1606020895015706'}
@@ -82,7 +87,12 @@ async def get_openorders(client, url, params):
 
 
 async def main():
-
+    symbol = 'ETH-USDT' # default or take from command line
+    if len(sys.argv[1:]) != 0:
+        symbol = sys.argv[1]
+        print(f'\n\nSymbol is: {symbol}')
+    
+    open_order_params = {'symbol': f'{symbol}'}
     print(f'PARAMS: {open_order_params}\n') 
 
     async with aiohttp.ClientSession() as session:
@@ -119,6 +129,14 @@ def get_oids(result):
 # get all open orders using async 
 async def allinone():
     try:
+        symbol = 'ETH-USDT' # default or take from command line
+        if len(sys.argv[1:]) != 0:
+            symbol = sys.argv[1]
+            print(f'\n\nSymbol is: {symbol}')
+        
+        open_order_params = {'symbol': f'{symbol}'}
+        print(f'PARAMS: {open_order_params}\n') 
+
         path = '/api/v3.2/user/open_orders'
         headers = make_headers(path, '')
         params = open_order_params

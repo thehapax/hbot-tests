@@ -8,19 +8,28 @@ from get_market import get_a_market
 from utils import get_one_market
 import time 
 
+# Error message sample: 
+# {'code': 4009, 'msg': 'BADREQUEST: Invalid order price decimal', 'time': 1613075126275, 'data': None, 'success': False}
+
 # this script works on testnet
 # uses REST api v3.1
 
 symbol = 'ETH-USDT'
+#symbol = 'BTC-USDT'
 #d_amount = 0.012
-d_amount = 0.000012
-
-r_bid_price = 1733.4234098750984
-
+d_amount = 0.012
 
 # adjust size and price for BTSE
 params = {'symbol': f'{symbol}'}  
-adjusted_price, final_size =  get_a_market(params, d_amount)
+
+# option #1, get avg price from market
+# adjusted_price, final_size =  get_a_market(params, d_amount)
+
+# option #2
+# use your price = 1733.4234098750984, size = d_amount
+price = 1733.4234098750984
+size = 0.5
+adjusted_price, final_size = get_one_market(params, size, price)
 
 r_bid_price = adjusted_price
 r_amount = final_size
@@ -30,7 +39,7 @@ print(f'\nAdjusted Price: {adjusted_price}, Final_size: {final_size}\n\n')
 ts = int(time.time())
 clientOID = "buy-" + symbol + "-" + str(ts)
 
-limit_order_form = {"symbol": "BTC-USDT",
+limit_order_form = {"symbol": f'{symbol}',
                     "side": "BUY",
                     "type": "LIMIT",
                     "price": f"{r_bid_price}",
@@ -91,8 +100,8 @@ async def main():
   print(f'FULL URL: {url}')
   print(f'limit order form: {limit_order_form}')
   
-  #headers=make_headers(path, json.dumps(limit_order_form))
-  #res = await limit_order(url, params=limit_order_form, headers=headers)
+  headers=make_headers(path, json.dumps(limit_order_form))
+  res = await limit_order(url, params=limit_order_form, headers=headers)
 
 
 if __name__ == '__main__':

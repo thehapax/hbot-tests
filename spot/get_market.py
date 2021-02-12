@@ -50,8 +50,8 @@ def get_a_market(params, size):
   
   price = (lAsk + hBid)/2
   
-  adjusted_price, adjusted_size = adjust_increment(minsizeinc, minpriceinc, price, size) 
-  final_size = bounded_size(adjusted_size, minsize, maxsize)
+  adjusted_price = adjust_increment(minpriceinc, price) 
+  final_size = bounded_size(size, minsize, maxsize, minsizeinc)
 
   pp.pprint(info)
   #print(f'\n Symbol: {symbol} lowest Ask {lAsk}, highest Bid: {hBid}')
@@ -77,13 +77,13 @@ def get_all_markets(size):
     price = (lAsk + hBid)/2
 
     print(f'\n >>> Symbol: {symbol},\n low24 price: {price},\n size: {size}')
-    adjusted_price, adjusted_size = adjust_increment(info['minSizeIncrement'], info['minPriceIncrement'], price, size)
+    adjusted_price = adjust_increment(info['minPriceIncrement'], price)
     
     minsize = info['minOrderSize']
     maxsize = info['maxOrderSize']
-    a_size = bounded_size(adjusted_size, minsize, maxsize)
+    a_size = bounded_size(size, minsize, maxsize, info['minSizeIncrement'])
     
-    print(f'\nadjusted price {adjusted_price}, adjusted size {a_size}, pre-adjusted size {adjusted_size}')
+    print(f'\nadjusted price {adjusted_price}, adjusted size {a_size}, pre-adjusted size {size}')
     print("==============================")
 
 
