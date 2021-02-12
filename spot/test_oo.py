@@ -2,6 +2,8 @@ import asyncio
 import aiohttp
 from btseauth_spot import make_headers, get_headers
 from decimal import Decimal
+from utils import adjust_increment, bounded_size
+from get_market import get_one_market
 import json
 import time
 
@@ -10,10 +12,13 @@ import time
  before proceeding to test in the hummingbot. It is simpler and doesn't have as many layers to check
  through. In addition the test methods here cover asyncio
 '''
+symbol = "BTC-USDT"
 
-symbol = 'ETH-USDT'
+#symbol = 'ETH-USDT'
+side = 'BUY'
+
 BTSE_Endpoint = 'https://testapi.btse.io/spot'
-open_order_params = {'symbol': f'{symbol}'}
+open_order_params = {'symbol':  symbol}
 path = '/api/v3.2/user/open_orders'
 url = BTSE_Endpoint+path
 
@@ -25,16 +30,15 @@ limit_path = '/api/v3.2/order'
 limit_url = BTSE_Endpoint+path
 
 ts = int(time.time())
-symbol = "BTC-USDT"
 clientOID = f"buy-{symbol}-" + str(ts)
 
 price = 18038.5
 
-limit_order_form = {"symbol": "BTC-USDT",
-                    "side": "BUY", 
+limit_order_form = {"symbol": f"{symbol}",
+                    "side": f"{side}", 
                     "type": "LIMIT", 
-                    "price": f"{price}", 
-                    "size": "0.012", 
+                    "price": f"{price}", # implement check price limit
+                    "size": "0.012",  ## implement check size
                     "time_in_force": "GTC", 
                     "txType": "LIMIT", 
                     "clOrderID": f"{clientOID}"}
@@ -101,6 +105,7 @@ async def cancel_orders(client,
 
 async def cancel_all_orders(session, responses):
     for r in responses:
+        print(r)
         print(r[0]['orderType'])
         ordertype = r[0]['orderType']
         if ordertype == 76: 
@@ -133,7 +138,7 @@ async def place_orders():
 async def run(r):
     # place 2 limit orders, get all open orders, cancel all open orders
     tasks = []
-#    await place_orders()
+    await place_orders()
     async with aiohttp.ClientSession() as session:
         # get all open orders, including the two above
         task = asyncio.ensure_future(get_openorders(client=session, path=path, params=open_order_params))
@@ -141,6 +146,7 @@ async def run(r):
         responses = await asyncio.gather(*tasks)
         print(f'length of responses: {len(responses)} \n\n')
         print(responses)
+        print(f'end of length of responses')
         # cancel all open orders
         await cancel_all_orders(session, responses)
         await session.close()

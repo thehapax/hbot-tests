@@ -47,6 +47,94 @@ def get_quote(symbol):
     return pairs[1]
 
 
+######### new methods to add to utils ######### 
+import math
+import decimal 
+
+# get the min order size
+'''
+def get_min_ordersize(r):
+      m = r.json()
+      jm = m[0]
+      #print(jm)
+      minsize = jm['minOrderSize']
+      print(f'\nmin order size: {minsize}\n')
+      return minsize
+'''    
+    
+# round down to the nearest multiple of a
+def round_down(x, a):
+    return math.floor(x / a) * a
+
+# round up - to use with minimum order size
+def round_up(x, a):
+    return math.ceil(x / a) * a
+  
+# round to the nearest multiple of a
+def round_nearest(x, a):
+    return round(x / a) * a
+
+# adjust price for order based on btse size/price increment restrictions.
+def adjust_increment(minpriceinc, minsizeinc, price, size):
+    print(f'>> input price: {price}, size: {size}')
+    p = decimal.Decimal(str(minpriceinc))
+    min_price_decimals = len(str(p).split(".")[1])
+    print(f'min price inc: {minpriceinc}, number of decimals allowed: {min_price_decimals}')
+    
+    deci = price - math.floor(price)
+    remainder = deci % minpriceinc 
+    if remainder == 0.0: # we are at no remainder so obeys step. 
+        adjusted_price = price
+        print(f'adjusted price is price: {price}')
+    else: 
+        near_price = round_nearest(price, minpriceinc)
+        adjusted_price = round(near_price, min_price_decimals)
+        print(f'round_nearest price: {near_price}, adj_price: {adjusted_price}')
+
+    print(f'>> Adjusted Price : {adjusted_price}')
+ 
+    print(f'\n>> Min Size Increment: {minsizeinc}')   
+    adjusted_size = round_up(size, minsizeinc)
+    print(f'>> Adjusted Size: {adjusted_size}\n')
+    
+    return adjusted_price, adjusted_size
+    
+
+# Calculate size for order within btse exchange bounds
+def bounded_size(adjusted_size, minsize, maxsize):
+  # print(f"\nExchange Minsize {minsize}, Maxsize {maxsize}")
+  if adjusted_size < maxsize and adjusted_size > minsize:
+        # print("adjusted size within bounds, ok")
+        return adjusted_size
+  elif adjusted_size <= minsize:
+        # print("make minsize adjusted size")
+        return minsize
+  elif adjusted_size >= maxsize:
+        # print("make adjusted_size maxsize")
+        return maxsize
+
+# for testing get one market size and price based on avg market price
+# mkt = get_market(params)
+def get_one_market(mkt, size, price):
+    try:
+        mkt_info = mkt.json()
+        info = mkt_info[0]
+        minsize = info['minOrderSize']
+        maxsize = info['maxOrderSize']
+        minsizeinc = info['minSizeIncrement']
+        minpriceinc = info['minPriceIncrement']
+        # print(f'\nMin Price Increment: {minpriceinc}')
+
+        adjusted_price, adjusted_size = adjust_increment(minsizeinc, minpriceinc, price, size)
+        final_size = bounded_size(adjusted_size, minsize, maxsize)
+        return adjusted_price, final_size
+    except Exception as e:
+        return e
+
+##### new methods to add to utils ######### 
+
+
+
 # 'symbol': 'BTC-USD', 
 if __name__ == "__main__":
     

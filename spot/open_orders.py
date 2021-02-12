@@ -23,11 +23,10 @@ url = BTSE_Endpoint+path
 print(f'url: {url}')
 
 pp = pprint.PrettyPrinter(indent=4)
-open_order_params = {'symbol': 'ETH-USDT'}
-#open_order_params = {'symbol': 'BTC-USDT'}
+# open_order_params = {'symbol': 'ETH-USDT'}
+open_order_params = {'symbol': 'BTC-USDT'}
 # open_order_params = {'symbol': 'BTC-USDT', 'orderID': 'd79e9511-4139-4cae-b020-8309f3658d89'}
 # open_order_params = {'clOrderID': 'buy-BTC-USDT-1606020895015706'}
-
 # --> ## open_order_params = {'symbol': 'BTC-USDT', 'clOrderID': 'buy-BTC-USDT-1606020895015706'}
 
 

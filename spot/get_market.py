@@ -13,9 +13,9 @@
 '''
 
 from btseauth_spot import BTSE_Endpoint
+from utils import adjust_increment, bounded_size
 import requests
 import pprint 
-import math
 
 pp = pprint.PrettyPrinter(indent=4)
 headers = {
@@ -23,87 +23,39 @@ headers = {
 }
 BTSE_Endpoint = 'https://testapi.btse.io/spot'
 
-
-# get the min order size
-def get_min_ordersize(r):
-      m = r.json()
-      jm = m[0]
-      #print(jm)
-      minsize = jm['minOrderSize']
-      print(f'\nmin order size: {minsize}\n')
-      return minsize
-    
-# round down to the nearest multiple of a
-def round_down(x, a):
-    return math.floor(x / a) * a
-
-# round up - to use with minimum order size
-def round_up(x,a):
-    return math.ceil(x / a) * a
-  
-# round to the nearest multiple of a
-def round_nearest(x, a):
-    return round(x / a) * a
-
-# adjust price for order based on btse size/price increment restrictions.
-def adjust_increment(info, price, size):
-    minsizeinc = info['minSizeIncrement']
-    minpriceinc = info['minPriceIncrement']
-    # print(f'\nMin Price Increment: {minpriceinc}')
-    
-    adjusted_price = round_nearest(price, minpriceinc)
-    # print(f'>> Adjusted Price : {adjusted_price}')
- 
-    # print(f'\nMin Size Increment: {minsizeinc}')   
-    adjusted_size = round_up(size, minsizeinc)
-    # print(f'>> Adjusted Size: {adjusted_size}')
-    
-    return adjusted_price, adjusted_size
-    
-
-# Calculate size for order within btse exchange bounds
-def bounded_size(adjusted_size, minsize, maxsize):
-  # print(f"\nExchange Minsize {minsize}, Maxsize {maxsize}")
-  if adjusted_size < maxsize and adjusted_size > minsize:
-        # print("adjusted size within bounds, ok")
-        return adjusted_size
-  elif adjusted_size <= minsize:
-        # print("make minsize adjusted size")
-        return minsize
-  elif adjusted_size >= maxsize:
-        # print("make adjusted_size maxsize")
-        return maxsize
-
-
 def get_market(params):
   r = requests.get(BTSE_Endpoint+'/api/v3.2/market_summary', params=params, headers = headers)
   return r
 
-
 #############################################
 
 # for testing get one market size and price based on avg market price
-def get_one_market(params, size):
+def get_a_market(params, size):
   mkt = get_market(params)
   mkt_info = mkt.json()
   info = mkt_info[0]
   minsize = info['minOrderSize']
   maxsize = info['maxOrderSize']
+  minsizeinc = info['minSizeIncrement']
+  minpriceinc = info['minPriceIncrement']
 
   lAsk = info['lowestAsk']
   hBid = info['highestBid'] 
+  ### TODO -- 'minValidPrice': 0.5 ??
+  
   # symbol = info['symbol']
   
   # Example: take the average of low Ask and high Bid for your new limit order
-  # if you want to set a price otherwise, skip this. 
+  # if you want to set a price otherwise, skip this or use your own pricing metric
+  
   price = (lAsk + hBid)/2
   
-  adjusted_price, adjusted_size = adjust_increment(info, price, size)
+  adjusted_price, adjusted_size = adjust_increment(minsizeinc, minpriceinc, price, size) 
   final_size = bounded_size(adjusted_size, minsize, maxsize)
 
-  # pp.pprint(info)
-  # print(f'\n Symbol: {symbol} lowest Ask {lAsk}, highest Bid: {hBid}')
-  # print(f'pre-adjusted size {adjusted_size}')
+  pp.pprint(info)
+  #print(f'\n Symbol: {symbol} lowest Ask {lAsk}, highest Bid: {hBid}')
+  #print(f'pre-adjusted size {adjusted_size}')
 
   return adjusted_price, final_size
 
@@ -125,7 +77,7 @@ def get_all_markets(size):
     price = (lAsk + hBid)/2
 
     print(f'\n >>> Symbol: {symbol},\n low24 price: {price},\n size: {size}')
-    adjusted_price, adjusted_size = adjust_increment(mkt_info[index], price, size)
+    adjusted_price, adjusted_size = adjust_increment(info['minSizeIncrement'], info['minPriceIncrement'], price, size)
     
     minsize = info['minOrderSize']
     maxsize = info['maxOrderSize']
@@ -142,7 +94,7 @@ if __name__ == '__main__':
   symbol = 'ETH-USDT'
 
   params = {'symbol': f'{symbol}'}  
-  adjusted_price, final_size =  get_one_market(params, size)
+  adjusted_price, final_size =  get_a_market(params, size)
   
   print(f'\n >>> Symbol: {symbol},\n ')
   print(f'params: {params}, Order Size Desired: {size} \n')

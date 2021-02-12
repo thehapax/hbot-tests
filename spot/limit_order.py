@@ -4,16 +4,31 @@ import aiohttp, asyncio
 from decimal import Decimal
 from utils import get_status_msg
 from btseauth_spot import BTSE_Endpoint, make_headers, get_tracking_nonce
+from get_market import get_a_market
+from utils import get_one_market
 import time 
 
 # this script works on testnet
 # uses REST api v3.1
 
-r_bid_price = 15487.5
-r_amount = 0.012
+symbol = 'ETH-USDT'
+#d_amount = 0.012
+d_amount = 0.000012
+
+r_bid_price = 1733.4234098750984
+
+
+# adjust size and price for BTSE
+params = {'symbol': f'{symbol}'}  
+adjusted_price, final_size =  get_a_market(params, d_amount)
+
+r_bid_price = adjusted_price
+r_amount = final_size
+
+print(f'\nAdjusted Price: {adjusted_price}, Final_size: {final_size}\n\n')
 
 ts = int(time.time())
-clientOID = "buy-BTC-USDT-" + str(ts)
+clientOID = "buy-" + symbol + "-" + str(ts)
 
 limit_order_form = {"symbol": "BTC-USDT",
                     "side": "BUY",
@@ -75,8 +90,9 @@ async def main():
   print(f'nonce: {nonce}')
   print(f'FULL URL: {url}')
   print(f'limit order form: {limit_order_form}')
-  headers=make_headers(path, json.dumps(limit_order_form))
-  res = await limit_order(url, params=limit_order_form, headers=headers)
+  
+  #headers=make_headers(path, json.dumps(limit_order_form))
+  #res = await limit_order(url, params=limit_order_form, headers=headers)
 
 
 if __name__ == '__main__':
