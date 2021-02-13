@@ -44,6 +44,8 @@ def get_a_market(params, size):
   hBid = info['highestBid'] 
   ### TODO -- 'minValidPrice': 0.5 ??
   
+  last = info['last']
+  print(f'\n\nLast Price on Market: {last}')
   # symbol = info['symbol']
   
   # Example: take the average of low Ask and high Bid for your new limit order
@@ -70,23 +72,31 @@ def get_all_markets(size):
   print(f'total pairs: {num_symbols}')
 
   index = 0
-
+  
   for info in mkt_info:
     symbol = info['symbol']
     lAsk = info['lowestAsk']
     hBid = info['highestBid']
     price = (lAsk + hBid)/2
-
-    print(f'\n >>> Symbol: {symbol},\n low24 price: {price},\n size: {size}')
-    adjusted_price = adjust_increment(info['minPriceIncrement'], price)
+    print(f'Symbol: {symbol}')
     
-    minsize = info['minOrderSize']
-    maxsize = info['maxOrderSize']
-    a_size = bounded_size(size, minsize, maxsize, info['minSizeIncrement'])
-    
-    print(f'\nadjusted price {adjusted_price}, adjusted size {a_size}, pre-adjusted size {size}')
-    print("==============================")
+    #if 'ATOM' in symbol:
+    try:
+      print(f'\n >>> Symbol: {symbol},\n low24 price: {price},\n size: {size}')
+      adjusted_price = adjust_increment(info['minPriceIncrement'], price)
+      
+      minsize = info['minOrderSize']
+      maxsize = info['maxOrderSize']
+      a_size = bounded_size(size, minsize, maxsize, info['minSizeIncrement'])
+      
+      last = info['last']
+      print(f'\n\nLast Price on Market: {last}')
 
+      print(f'\nadjusted price {adjusted_price}, adjusted size {a_size}, pre-adjusted size {size}')
+      print("==============================")
+    except Exception as e:
+      print(f'Error on Conversion: {e}')
+    
 
 
 if __name__ == '__main__':
@@ -106,7 +116,7 @@ if __name__ == '__main__':
   print("==============================")
   
   # get all market information and adjust price and size to within btse bounds
-  # get_all_markets(size)
+  get_all_markets(size)
 
 
 

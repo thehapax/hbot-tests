@@ -7,6 +7,7 @@ from btseauth_spot import BTSE_Endpoint, make_headers, get_tracking_nonce
 from get_market import get_a_market
 from utils import get_one_market
 import time 
+import sys
 
 # Error message sample: 
 # {'code': 4009, 'msg': 'BADREQUEST: Invalid order price decimal', 'time': 1613075126275, 'data': None, 'success': False}
@@ -14,42 +15,6 @@ import time
 # this script works on testnet
 # uses REST api v3.1
 
-symbol = 'ETH-USDT'
-#symbol = 'BTC-USDT'
-#d_amount = 0.012
-d_amount = 0.012
-
-# adjust size and price for BTSE
-params = {'symbol': f'{symbol}'}  
-
-# option #1, get avg price from market
-# adjusted_price, final_size =  get_a_market(params, d_amount)
-
-# option #2
-# use your price = 1733.4234098750984, size = d_amount
-price = 1733.4234098750984
-size = 0.5
-adjusted_price, final_size = get_one_market(params, size, price)
-
-r_bid_price = adjusted_price
-r_amount = final_size
-
-print(f'\nAdjusted Price: {adjusted_price}, Final_size: {final_size}\n\n')
-
-ts = int(time.time())
-clientOID = "buy-" + symbol + "-" + str(ts)
-
-limit_order_form = {"symbol": f'{symbol}',
-                    "side": "BUY",
-                    "type": "LIMIT",
-                    "price": f"{r_bid_price}",
-                    "size": f"{r_amount}",
-                    "triggerPrice": 0,
-                    "time_in_force": "GTC",
-                    "txType": "LIMIT",
-                    "clOrderID": f"{clientOID}"}
-
-print(limit_order_form)
 
 path = '/api/v3.2/order'
 url = BTSE_Endpoint+path
@@ -95,6 +60,45 @@ async def limit_order(url, params, headers):
 
 
 async def main():
+  # option #1
+  # use your price = 1733.4234098750984, size = d_amount
+  symbol = 'ETH-USDT'
+  price = 1843.4234098750984
+  size = 0.5
+
+  if len(sys.argv[1:]) != 0:
+        symbol = sys.argv[1]
+
+  # adjust size and price for BTSE
+  params = {'symbol': f'{symbol}'}  
+
+  # option #2 get avg price from market
+  #d_amount = 0.012
+  # adjusted_price, final_size =  get_a_market(params, d_amount)
+  
+  # bound price based on btse requirements
+  adjusted_price, final_size = get_one_market(params, size, price)
+
+  r_bid_price = adjusted_price
+  r_amount = final_size
+  print(f'\nAdjusted Price: {r_bid_price}, Final_size: {r_amount}\n\n')
+
+  ts = int(time.time())
+  clientOID = "buy-" + symbol + "-" + str(ts)
+
+  limit_order_form = {"symbol": f'{symbol}',
+                      "side": "BUY",
+                      "type": "LIMIT",
+                      "price": f"{r_bid_price}",
+                      "size": f"{r_amount}",
+                      "triggerPrice": 0,
+                      "time_in_force": "GTC",
+                      "txType": "LIMIT",
+                      "clOrderID": f"{clientOID}"}
+
+  print(limit_order_form)
+
+  
   nonce = get_tracking_nonce()
   print(f'nonce: {nonce}')
   print(f'FULL URL: {url}')

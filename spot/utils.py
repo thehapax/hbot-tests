@@ -77,45 +77,49 @@ def round_nearest(x, a):
 
 # adjust price for order based on btse size/price increment restrictions.
 def adjust_increment(minpriceinc, price):
-    print(f'>> input price: {price}')
-    p = decimal.Decimal(str(minpriceinc))
-    min_price_decimals = len(str(p).split(".")[1])
-    print(f'min price inc: {minpriceinc}, number of decimals allowed: {min_price_decimals}')
-    
-    deci = price - math.floor(price)
-    remainder = deci % minpriceinc 
-    if remainder == 0.0: # we are at no remainder so obeys step. 
-        adjusted_price = price
-        print(f'adjusted price is price: {price}')
-    else: 
-        near_price = round_nearest(price, minpriceinc)
-        adjusted_price = round(near_price, min_price_decimals)
-        print(f'round_nearest price: {near_price}, adj_price: {adjusted_price}')
+    try:
+        print(f'>> input price: {price}, minpriceinc: {minpriceinc}')
+        p = decimal.Decimal(str(minpriceinc))
+        min_price_decimals = len(str(p).split(".")[1])
+        print(f'min price inc: {minpriceinc}, number of decimals allowed: {min_price_decimals}')
+        
+        deci = price - math.floor(price)
+        remainder = deci % minpriceinc 
+        if remainder == 0.0: # we are at no remainder so obeys step. 
+            adjusted_price = price
+            print(f'adjusted price is price: {price}')
+        else: 
+            near_price = round_nearest(price, minpriceinc)
+            adjusted_price = round(near_price, min_price_decimals)
+            print(f'round_nearest price: {near_price}, adj_price: {adjusted_price}')
 
-    print(f'>> Adjusted Price : {adjusted_price}')
-    return adjusted_price
-    
+        print(f'>> Adjusted Price : {adjusted_price}')
+        return adjusted_price
+    except Exception as e:
+        return e
+
 
 # Calculate size for order within btse exchange bounds
 def bounded_size(adjusted_size, minsize, maxsize, minsizeinc):
-    print(f'>> \ninput size: {adjusted_size}')
-    # print(f"\nExchange Minsize {minsize}, Maxsize {maxsize}")
-    size = adjusted_size
-    if adjusted_size < maxsize and adjusted_size > minsize:
-        # print("adjusted size within bounds, ok")
+    try:
+        print(f'>> \ninput size: {adjusted_size}')
+        # print(f"\nExchange Minsize {minsize}, Maxsize {maxsize}")
         size = adjusted_size
-    elif adjusted_size <= minsize:
-        # print("make minsize adjusted size")
-        size = minsize
-    elif adjusted_size >= maxsize:
-        # print("make adjusted_size maxsize")
-        size = maxsize
-    print(f'\n>> Min Size Increment: {minsizeinc}')   
-    size = round_up(size, minsizeinc)
-    print(f'>> Adjusted Size: {adjusted_size}\n')
-    return size
-
-# TODO: fix floor of SIZE first before adjusting increment. 
+        if adjusted_size < maxsize and adjusted_size > minsize:
+            # print("adjusted size within bounds, ok")
+            size = adjusted_size
+        elif adjusted_size <= minsize:
+            # print("make minsize adjusted size")
+            size = minsize
+        elif adjusted_size >= maxsize:
+            # print("make adjusted_size maxsize")
+            size = maxsize
+        print(f'\n>> Min Size Increment: {minsizeinc}')   
+        size = round_up(size, minsizeinc)
+        print(f'>> Adjusted Size: {adjusted_size}\n')
+        return size
+    except Exception as e:
+        return e
 
 
 # for testing get one market size and price based on avg market price
