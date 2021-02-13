@@ -28,12 +28,14 @@ async def del_order(url, params, headers):
 
 
 async def main():
-    # symbol = 'BTC-USDT'
-    oidlist = ['39497adb-2599-4bd6-97b7-9729647ecad7']
     symbol = 'ETH-USDT' # default or take from command line
+    oidlist = ['asdf'] # default sample
+
     if len(sys.argv[1:]) != 0:
         symbol = sys.argv[1]
-        print(f'\n\nSymbol is: {symbol}')
+        oidlist = []
+        oidlist.append(sys.argv[2])
+        print(f'\n\nSymbol is: {symbol}, oidlist = {oidlist}')
 
     path = '/api/v3.2/order'
     url = BTSE_Endpoint+path

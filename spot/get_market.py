@@ -15,7 +15,8 @@
 from btseauth_spot import BTSE_Endpoint
 from utils import adjust_increment, bounded_size
 import requests
-import pprint 
+import pprint
+import sys
 
 pp = pprint.PrettyPrinter(indent=4)
 headers = {
@@ -92,6 +93,9 @@ if __name__ == '__main__':
 
   size = 0.05  # this is the size of the order we would like to place on exchange.
   symbol = 'ETH-USDT'
+  if len(sys.argv[1:]) != 0:
+        symbol = sys.argv[1]
+
 
   params = {'symbol': f'{symbol}'}  
   adjusted_price, final_size =  get_a_market(params, size)

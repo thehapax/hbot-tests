@@ -8,6 +8,7 @@
 from btseauth_spot import BTSE_Endpoint
 import requests
 import pprint 
+import sys
 
 from typing import (
     List,
@@ -24,7 +25,11 @@ headers = {
 url = BTSE_Endpoint+'/api/v3.2/price'
 print(url)
 
-r = requests.get(url, params={'symbol': 'BTC-USDT'}, headers = headers)
+symbol = 'BTC-USDT'
+if len(sys.argv[1:]) != 0:
+      symbol = sys.argv[1]
+
+r = requests.get(url, params={'symbol': f'{symbol}'}, headers = headers)
 pp.pprint(r.json())
 print("\n")
 
