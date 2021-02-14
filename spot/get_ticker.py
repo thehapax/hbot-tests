@@ -29,10 +29,16 @@ symbol = 'BTC-USDT'
 if len(sys.argv[1:]) != 0:
       symbol = sys.argv[1]
 
-r = requests.get(url, params={'symbol': f'{symbol}'}, headers = headers)
+params = {'symbol': f'{symbol}'}
+r = requests.get(url, params=params, headers = headers)
+
+print(f'params: {params}')
+print(f'headers: {headers}')
+pp.pprint(r)
 pp.pprint(r.json())
 print("\n")
 
+'''
 res = r.json()
 content = res[0]
 pp.pprint(content)
@@ -44,6 +50,8 @@ pp.pprint(symbol)
 s = res[0]['symbol']
 print(s)
 print(type(s))
+'''
+
 
 '''
 all_trading_pairs: List[Dict[str, Any]] = r.json()

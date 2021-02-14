@@ -98,13 +98,14 @@ async def main():
     async with aiohttp.ClientSession() as session:
         response = await get_openorders(client=session, url=url, params=open_order_params)
         print("\n")
+        print(f'response: {response}')
         pairs = get_cancelparams(response)
         print(f'Total number of pairs: {len(pairs)}\n\n')
         print(pairs)
         await session.close()
 
-#loop = asyncio.get_event_loop()
-#loop.run_until_complete(main())
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
     
 
 def get_oids(result):
@@ -145,17 +146,19 @@ async def allinone():
         
         async with aiohttp.ClientSession() as client:
             async with client.request('get', url=url, params=params, headers=headers) as response:
+                print(f'response: {response}')
                 result = await response.json()
                 pp.pprint(result)
                 get_oids(result)
                 
         await client.close()   
     except Exception as e: 
-        print(e)
+        pass
+        #print(e)
 
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(allinone())
+#loop = asyncio.get_event_loop()
+#loop.run_until_complete(allinone())
 
 
 # get just this one open order

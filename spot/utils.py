@@ -46,12 +46,6 @@ def get_quote(symbol):
     pairs = symbol.split('-')
     return pairs[1]
 
-
-######### new methods to add to utils ######### 
-import math
-import decimal 
-import requests
-
 # get the min order size
 '''
 def get_min_ordersize(r):
@@ -61,7 +55,12 @@ def get_min_ordersize(r):
       minsize = jm['minOrderSize']
       print(f'\nmin order size: {minsize}\n')
       return minsize
-'''    
+'''
+
+######### new methods to add to utils ######### 
+import math
+import decimal 
+import requests
     
 # round down to the nearest multiple of a
 def round_down(x, a):

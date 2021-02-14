@@ -50,21 +50,34 @@ def process_orderbook_data(ob):
     print("==== Asks =====")
     print(asks)
 
-def get_auth_responses(response):
-    lookup = {'UNLOGIN_USER connect success': 'Connected No Login or bad token', 
-              'connect success': 'connected with token',
-              'is authenticated successfully': 'Do Auth Pass',
-              'AUTHENTICATE ERROR': 'do auth pass failed' }
+def get_event_responses(response):        
+    '''
+    if channel list doesn't match payload list 
+    When subscribing or unsubscribing to websocket topics, an acknowledgement 
+    will return to indicate which topics are successfully subscribed / unsubscribed. 
+    Unsuccessful topics are not returned in the response
+    Examples: 
+    {"event":"login","success":true}
+    {"event":"subscribe","channel":["tradeHistoryApi:BTC-USDT","notificationApiV1:"]}
+    {"code":10002,"success":false,"time":1613279439623}
+    '''
     
-    if "topic" in str(response):
-        return ujson.loads(response)
+    lookup = {'login' : 'success', 'subscribe': 'channel'}
+    ## Need method to check subscriptions against payload args.  
     
-    for k,v in lookup.items():
-        if k in response:
-            rdict = {"topic":"auth", "message": str(response), "info": str(v)} 
-            #print(rdict)
-            return ujson.dumps(rdict)
-
+    print(f'response {response}')
+    res = ujson.loads(response)
+    
+    if 'login' in response: 
+        status = res['success']
+    elif 'subscribe' in response:
+        status = res['channel']
+    elif 'code' in response: # error code
+        status = res['code']
+    
+    print(f'status: {status}, type: {type(status)}')
+    return status            
+    
 async def connect_forever():
     path = '/spotWS'
     url = BTSE_WSEndpoint + path
@@ -81,7 +94,7 @@ async def connect_forever():
         ob_payload = orderbook_payload()
         trade_payload = tradehistory_payload()
         await websocket.send(ujson.dumps(user_payload))
-#        await websocket.send(ujson.dumps(ob_payload))
+        # await websocket.send(ujson.dumps(ob_payload))
         await websocket.send(ujson.dumps(trade_payload))
 
         MESSAGE_TIMEOUT = 30.0
@@ -91,8 +104,8 @@ async def connect_forever():
                 response: Dict[Any] = await asyncio.wait_for(websocket.recv(), timeout=MESSAGE_TIMEOUT)
                 print("\n======= WEBSOCKET DATA RECEIVED: ======= \n")
                 print(response)
-                code = get_auth_responses(response)
-                print(code)
+                code = get_event_responses(response)
+                #print(f'Event status: {str(code)}')
                 
                 if 'topic' in response:
                     print(type(response))
@@ -100,11 +113,7 @@ async def connect_forever():
                     topic = r['topic']
                     print(f'topic: {topic}')
                     
-#                    data = r['data'][0]
-#                    print(data)
-#                    status = data['status']
-#                    print(f'status: {status}')
-                
+                                    
                 '''
                 if "topic" in response:
                     r = ujson.loads(str(response))
@@ -146,7 +155,6 @@ Sample process_orderbook_data result:
 [{'price': '10247.0', 'size': '0.112'}, {'price': '10246.5', 'size': '0.471'}, {'price': '10246.0', 'size': '0.237'}, {'price': '10245.0', 'size': '0.319'}, {'price': '10243.5', 'size': '0.960'}, {'price': '10243.0', 'size': '1.119'}, {'price': '10242.5', 'size': '1.288'}, {'price': '10242.0', 'size': '2.521'}, {'price': '10241.5', 'size': '3.273'}, {'price': '10240.5', 'size': '0.466'}]
 ==== Asks =====
 [{'price': '10262.5', 'size': '0.286'}, {'price': '10262.0', 'size': '0.438'}, {'price': '10258.0', 'size': '0.610'}, {'price': '10257.5', 'size': '0.198'}, {'price': '10257.0', 'size': '0.281'}, {'price': '10256.5', 'size': '0.138'}, {'price': '10256.0', 'size': '0.161'}, {'price': '10255.5', 'size': '0.304'}, {'price': '10254.5', 'size': '0.092'}, {'price': '10254.0', 'size': '0.332'}]
-
 '''
 
 '''

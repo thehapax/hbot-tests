@@ -11,7 +11,7 @@ pp = pprint.PrettyPrinter(indent=4)
 path = '/api/v3.2/user/wallet'
 btse_test_url ='https://testapi.btse.io/spot/api/v3.2/user/wallet'
 
-# params ={}
+#params ={}
 params = {'currency': 'BTC'} 
 # params don't work, all balances are returned. 
 # await self._api_request("get", "price?symbol=BTC-USDT")
@@ -27,8 +27,9 @@ print(str(r))
 print(str(r.text))
 
 response = r.json()
-#pp.pprint(response)
+pp.pprint(response)
 
+'''
 for coin in response:
     if str(coin['available']) != '0.0':
         print(str(coin['currency']))
@@ -36,7 +37,7 @@ for coin in response:
         total = Decimal(str(coin['total']))
         print("\tAvail: " + str(avail))
         print("\tTotal: " + str(total))
-
+'''
 
         
 

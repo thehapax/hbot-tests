@@ -66,6 +66,10 @@ async def main():
   price = 1843.4234098750984
   size = 0.5
 
+  symbol = 'BTC-USDT'
+  price = 37050
+  size = 0.002
+
   if len(sys.argv[1:]) != 0:
         symbol = sys.argv[1]
 
