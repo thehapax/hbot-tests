@@ -68,6 +68,7 @@ def get_event_responses(response):
     print(f'response {response}')
     res = ujson.loads(response)
     
+    status = ''
     if 'login' in response: 
         status = res['success']
     elif 'subscribe' in response:

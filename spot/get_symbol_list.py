@@ -1,4 +1,3 @@
-# https://api.btse.com/spot/api/v3.2/market_summary
 
 from btseauth_spot import BTSE_Endpoint
 import requests
@@ -6,8 +5,6 @@ import pprint
 import json
 from decimal import Decimal
 import math
-
-# https://testapi.btse.io/spot/api/v3.2/market_summary
 
 BTSE_Endpoint = 'https://testapi.btse.io/spot'
 

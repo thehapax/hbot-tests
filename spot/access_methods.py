@@ -110,19 +110,22 @@ class BtseEx():
                     result = await response.text()
                     print(f"\n GET response: {result}")
                     
-            elif method == "post":
+            elif method == "post": 
                 jsond= json.dumps(params)
                 headers = make_headers(path_url, jsond)
                 print(f"\n INSIDE CLIENT.POST: url: {url}, json: {jsond}, headers: {headers}\n")
                 # tricky - post uses json=params, header uses json.dumps(params)
+                # hbot code uses client.request
+                #async with client.request('post', url=url, json=jsond, headers=headers) as response:
+
                 async with client.post(url, json=params, headers=headers) as response:
                     result = await response.text()
                     print(f"\n POST response: {result}")
                     
-            elif method == "delete":
+            elif method == "delete": # client.delete in hbot code
                 print(f"\n INSIDE DELETE order. {url}, params: {params}, headers: {headers}\n")
+                #async with client.delete(url, params=params, headers=headers) as response:
                 async with client.request('delete', url=url, params=params, headers=headers) as response:
-                # async with client.delete(url, params=params, headers=headers) as response:
                     result = await response.text()
                     print(f"\n DELETE response: {result}")
 
@@ -154,6 +157,19 @@ class BtseEx():
                                          is_auth_required=True)
         # await self.close_http()
         return result
+
+    async def update_trading_rules(self, params):
+            print("inside _update_trading_rules in BtseExchange")
+            # params={'symbol':'BTC-USDT'} ###### ADD TEMPORARY
+            #params = {} # get all markets
+            market_info = await self._api_request(method="get", 
+                                                  path="market_summary", 
+                                                  params=params, 
+                                                  is_auth_required=False)
+            # market_info = await self._api_request(method="get", path="market_summary")
+            print(market_info)
+
+
 
     async def limit_order(self, path, params):
         result = await self._api_request(method='post', 

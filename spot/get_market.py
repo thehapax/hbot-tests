@@ -25,7 +25,9 @@ headers = {
 BTSE_Endpoint = 'https://testapi.btse.io/spot'
 
 def get_market(params):
-  r = requests.get(BTSE_Endpoint+'/api/v3.2/market_summary', params=params, headers = headers)
+  url = BTSE_Endpoint+'/api/v3.2/market_summary'
+  print(f'get_market params: {params},\n headers: {headers}, \n url: {url}')
+  r = requests.get(url, params=params, headers = headers)
   return r
 
 #############################################
@@ -116,7 +118,7 @@ if __name__ == '__main__':
   print("==============================")
   
   # get all market information and adjust price and size to within btse bounds
-  get_all_markets(size)
+  #get_all_markets(size)
 
 
 

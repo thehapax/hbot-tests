@@ -18,6 +18,10 @@ params = {'currency': 'BTC'}
 
 headers=make_headers(path, '')
 
+print(f'headers: {headers}')
+print(f'params: {params}')
+print(f'url: {btse_test_url}')
+
 r = requests.get(
     btse_test_url,
     params=params,

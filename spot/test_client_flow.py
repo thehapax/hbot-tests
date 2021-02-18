@@ -37,13 +37,15 @@ cancel_path = 'order'
 cancel_params = {"clOrderID": f'{clientOID}',
                  'symbol':'ETH-USDT'}
 
+params = {'symbol':'BTC-USDT'} 
 
 async def main():
     try:
         be = BtseEx()
-        order_result = await be.open_orders(path=open_path, params=open_order_params)
-        limit_result = await be.limit_order(path=limit_path, params=limit_order_form)
-        delete_result = await be.delete_order(path=cancel_path, params=cancel_params)
+        update_trading_rules = await be.update_trading_rules(params=params)
+#        order_result = await be.open_orders(path=open_path, params=open_order_params)
+#        limit_result = await be.limit_order(path=limit_path, params=limit_order_form)
+#        delete_result = await be.delete_order(path=cancel_path, params=cancel_params)
         await be.close_http()
     except Exception as e:
         print(e)    
