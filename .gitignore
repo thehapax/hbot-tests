@@ -134,3 +134,5 @@ aiotests
 archive
 cython
 futures
+*scratch*
+oresult_scratch.py 
