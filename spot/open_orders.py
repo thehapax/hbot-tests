@@ -99,9 +99,11 @@ async def main():
         response = await get_openorders(client=session, url=url, params=open_order_params)
         print("\n")
         print(f'response: {response}')
+        print(f'\nGet parameters from response that are needed for cancelling orders:\n')
         pairs = get_cancelparams(response)
-        print(f'Total number of pairs: {len(pairs)}\n\n')
         print(pairs)
+        print(f'\nTotal number of pairs: {len(pairs)}\n\n')
+
         await session.close()
 
 loop = asyncio.get_event_loop()

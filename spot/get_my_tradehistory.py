@@ -58,18 +58,29 @@ path = '/api/v3.2/user/trade_history'
 # params = { 'tradeId' : '68c86d7a-502c-4400-ad3b-02ef3474937b' } # currently this filters does not work on BTSE Spot API 
 
 params = {'symbol': 'BTC-USDT', 
-         'orderId': '7bda5bcc-68fb-459e-8376-bcd8137600c9',
-          'startTime': 1611040430000}
+          'startTime': 1611040430000} # works
 
-params = { 'orderID': 'a01416b4-96b7-429e-8ed4-33ee8bf06d0a', # this works
-         'startTime': 1606469000000 } 
+# params = { 'orderID': 'a01416b4-96b7-429e-8ed4-33ee8bf06d0a', # this works
+#         'startTime': 1606469000000 } 
 
-# params = {'clOrderID': 'buy-BTC-USDT-1606020895015706'} # this works - when testing, don't create a single client Order ID for multiple orders
+params = {'clOrderID': 'buy-BTC-USDT-1606020895015706'} # this works - when testing, don't create a single client Order ID for multiple orders
 
-print(f'Params: {params}')
+#params = {'clOrderID': 'buy-BTC-USDT-1613877360'}
+
+#params = {'clOrderID': '1741a782-588d-4bf3-8e5a-05f04c760a47',
+#          'startTime': 1611040430000}
+
+params = {'orderID': '2859d157-b6d3-4607-99ff-cfd19e85f6b2'}
+
+# params = {'orderID': 'a01416b4-96b7-429e-8ed4-33ee8bf06d0a'}
+#params = {'clOrderID': 'buy-BTC-USDT-1606020895015706'}
+
+params = {'orderID': '54209b88-714c-4aa0-a4e1-c8aa7f91fc71'}
 
 fullpath = BTSE_Endpoint+path
 print(f'REST API: {fullpath}')
+print(f'Params: {params}')
+
 
 r = requests.get(fullpath,
                 params=params,

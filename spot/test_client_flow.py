@@ -18,7 +18,7 @@ pp = pprint.PrettyPrinter(indent=4)
 #price = Decimal('%.7g' % price)
 
 ts = int(time.time())
-symbol = "ETH-USDT"
+symbol = "BTC-USDT"
 clientOID = f"buy-{symbol}-" + str(ts)
 price = 1110.5
 
@@ -30,12 +30,12 @@ limit_order_form = {"symbol": f'{symbol}', "side": "BUY", "type": "LIMIT",
                      "txType": "LIMIT", "clOrderID": f'{clientOID}'}
 limit_path = 'order'
 
-open_order_params = {'symbol': 'ETH-USDT'}
+open_order_params = {'symbol': 'BTC-USDT'}
 open_path = 'user/open_orders'
 
 cancel_path = 'order'
 cancel_params = {"clOrderID": f'{clientOID}',
-                 'symbol':'ETH-USDT'}
+                 'symbol':'BTC-USDT'}
 
 params = {'symbol':'BTC-USDT'} 
 
@@ -43,9 +43,16 @@ async def main():
     try:
         be = BtseEx()
         update_trading_rules = await be.update_trading_rules(params=params)
-#        order_result = await be.open_orders(path=open_path, params=open_order_params)
-#        limit_result = await be.limit_order(path=limit_path, params=limit_order_form)
-#        delete_result = await be.delete_order(path=cancel_path, params=cancel_params)
+        order_result = await be.open_orders(path=open_path, params=open_order_params)
+        limit_result = await be.limit_order(path=limit_path, params=limit_order_form)
+        delete_result = await be.delete_order(path=cancel_path, params=cancel_params)
+        
+        print(f'\n\n ***** delete_result = {delete_result}\n')
+        orderID = delete_result[0]['orderID']
+        print(f'\n orderID: {orderID}\n')
+        # clOrderID = 'buy-BTC-USDT-1606020895015706'
+        history = await be.get_trade_history(orderID)
+
         await be.close_http()
     except Exception as e:
         print(e)    

@@ -100,6 +100,11 @@ async def main():
                       "txType": "LIMIT",
                       "clOrderID": f"{clientOID}"}
 
+  limit_order_form = {'symbol': 'BTC-USDT', 'side': 'BUY', 'type': 'LIMIT', 'price': '47050.000000', 
+                    'size': '0.002000', 'triggerPrice': 0, 'time_in_force': 'GTC', 'txType': 'LIMIT',
+                    'clOrderID': 'buy-BTC-USDT-1613639646009553'}
+
+
   print(limit_order_form)
 
   

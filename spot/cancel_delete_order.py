@@ -26,11 +26,17 @@ async def del_order(url, params, headers):
     finally:
         await client.close()
 
+# todo - 2/20/21
+# async def cancel_all(pair):
+    # get open orders for pair
+    # cancel all open orders for pair
+
 
 async def main():
-    symbol = 'ETH-USDT' # default or take from command line
-    oidlist = ['asdf'] # default sample
-
+    
+    symbol = 'BTC-USDT' # default or take from command line
+    oidlist = ['1741a782-588d-4bf3-8e5a-05f04c760a47'] # default sample
+    
     if len(sys.argv[1:]) != 0:
         symbol = sys.argv[1]
         oidlist = []

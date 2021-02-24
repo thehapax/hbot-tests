@@ -41,6 +41,7 @@ def get_a_market(params, size):
   maxsize = info['maxOrderSize']
   minsizeinc = info['minSizeIncrement']
   minpriceinc = info['minPriceIncrement']
+  minvalidprice =  info['minValidPrice']
 
   lAsk = info['lowestAsk']
   hBid = info['highestBid'] 
@@ -55,14 +56,19 @@ def get_a_market(params, size):
   
   price = (lAsk + hBid)/2
   
-  adjusted_price = adjust_increment(minpriceinc, price) 
+  price_quantized = adjust_increment(price, minpriceinc)
+  
+  if price_quantized < minvalidprice:
+      price_quantized = minvalidprice
+  print(f'>> get_order_price_quantum - Quantized Price : {price_quantized}')
+
   final_size = bounded_size(size, minsize, maxsize, minsizeinc)
 
   pp.pprint(info)
   #print(f'\n Symbol: {symbol} lowest Ask {lAsk}, highest Bid: {hBid}')
   #print(f'pre-adjusted size {adjusted_size}')
 
-  return adjusted_price, final_size
+  return price_quantized, final_size
 
   
 def get_all_markets(size):
@@ -81,11 +87,13 @@ def get_all_markets(size):
     hBid = info['highestBid']
     price = (lAsk + hBid)/2
     print(f'Symbol: {symbol}')
+    minvalidprice =  info['minValidPrice']
+    minpriceinc = info['minPriceIncrement']
     
     #if 'ATOM' in symbol:
     try:
       print(f'\n >>> Symbol: {symbol},\n low24 price: {price},\n size: {size}')
-      adjusted_price = adjust_increment(info['minPriceIncrement'], price)
+      adjusted_price = adjust_increment(price, minpriceinc, minvalidprice)
       
       minsize = info['minOrderSize']
       maxsize = info['maxOrderSize']
@@ -108,7 +116,6 @@ if __name__ == '__main__':
   if len(sys.argv[1:]) != 0:
         symbol = sys.argv[1]
 
-
   params = {'symbol': f'{symbol}'}  
   adjusted_price, final_size =  get_a_market(params, size)
   
@@ -118,7 +125,7 @@ if __name__ == '__main__':
   print("==============================")
   
   # get all market information and adjust price and size to within btse bounds
-  #get_all_markets(size)
+  # get_all_markets(size)
 
 
 

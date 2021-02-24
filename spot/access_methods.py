@@ -8,6 +8,7 @@ from decimal import Decimal
 from btseauth_spot import BTSE_Endpoint, make_headers
 from constants import *
 from async_utils import *
+import time
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -26,7 +27,7 @@ class BtseEx():
         self.BTSE_Endpoint = 'https://testapi.btse.io/spot'
         self.REST_URL = 'https://testapi.btse.io/spot'
         self.API_CALL_TIMEOUT = 10.0
-
+        self._last_poll_timestamp = int(time.time())
 
     def get_orderids(self, result):
         ids = []
@@ -144,6 +145,15 @@ class BtseEx():
         #print(f"RESPONSE: {parsed_response}")
         return parsed_response
             
+
+    async def get_trade_history(self, order_id):
+        result = await self._api_request(method="get", 
+                                         path="user/trade_history",
+                                         params={"orderID": order_id}, 
+                                                # "startTime": self._last_poll_timestamp},
+                                        is_auth_required=True)
+        print(f'Get Trade History result: {result}')
+        return result
 
     async def open_orders(self, path, params):
         '''

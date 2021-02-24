@@ -3,7 +3,7 @@ import aiohttp
 from btseauth_spot import make_headers, get_headers
 from decimal import Decimal
 from utils import adjust_increment, bounded_size
-from get_market import get_one_market
+#from get_market import get_one_market
 import json
 import time
 
