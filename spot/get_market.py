@@ -26,7 +26,7 @@ BTSE_Endpoint = 'https://testapi.btse.io/spot'
 
 def get_market(params):
   url = BTSE_Endpoint+'/api/v3.2/market_summary'
-  print(f'get_market params: {params},\n headers: {headers}, \n url: {url}')
+  #print(f'get_market params: {params},\n headers: {headers}, \n url: {url}')
   r = requests.get(url, params=params, headers = headers)
   return r
 

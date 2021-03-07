@@ -91,10 +91,10 @@ async def connect_forever():
         
         # Subscription - order notifications
         user_payload = subscription_payload()
-        ob_payload = orderbook_payload()
+        #ob_payload = orderbook_payload()
         trade_payload = tradehistory_payload()
         await websocket.send(ujson.dumps(user_payload))
-        # await websocket.send(ujson.dumps(ob_payload))
+        #await websocket.send(ujson.dumps(ob_payload))
         await websocket.send(ujson.dumps(trade_payload))
 
         MESSAGE_TIMEOUT = 30.0
@@ -107,14 +107,14 @@ async def connect_forever():
                 code = get_event_responses(response)
                 #print(f'Event status: {str(code)}')
                 
+                '''
                 if 'topic' in response:
                     print(type(response))
                     r = ujson.loads(str(response))
                     topic = r['topic']
                     print(f'topic: {topic}')
-                    
-                                    
-                '''
+                '''      
+                
                 if "topic" in response:
                     r = ujson.loads(str(response))
                     if "orderBookApi" in r['topic']:
@@ -133,10 +133,11 @@ async def connect_forever():
                         pp.pprint('data')
                 else:
                     print("No topic in response")
-                    code = get_auth_responses(response)
-                    print(type(code))
-                    print(code)
-                '''
+                    print(response)
+                    #code = get_auth_responses(response)
+                    #print(type(code))
+                    #print(code)
+                
             except Exception as e:
                 print(e)
 

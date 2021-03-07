@@ -1,6 +1,5 @@
 import ujson
 
-    
 BTSE_ENUM = {
 1: "MARKET_UNAVAILABLE",
 2: "ORDER_INSERTED",
@@ -57,10 +56,12 @@ def get_min_ordersize(r):
       return minsize
 '''
 
-######### new methods to add to utils ######### 
+################## new methods to add to utils ################## 
 import math
-import decimal 
 import requests
+import locale
+from decimal import Decimal
+
     
 # round down to the nearest multiple of a
 def round_down(x, a):
@@ -77,18 +78,33 @@ def round_nearest(x, a):
 # adjust price for order based on btse size/price increment restrictions.
 def adjust_increment(price, minpriceinc):
     try:
-        print(f'>> adjust_increment, input price: {price}, minpriceinc: {minpriceinc}')
-        p = decimal.Decimal(str(minpriceinc))
+        price = Decimal(price)
+        print(f'>> adjust_increment, input price: {price}, minpriceinc: {minpriceinc}\n')
+        print(f'Type of minpriceinc {type(minpriceinc)}, price: {type(price)}\n')
+
+        if 'e' in str(minpriceinc):
+            p = Decimal(locale.format_string("%f", minpriceinc))
+        else:
+            p = Decimal(str(minpriceinc))
+        
         min_price_decimals = len(str(p).split(".")[1])
-        print(f'Inside Adjust_increment: min price inc: {minpriceinc}, number of decimals allowed: {min_price_decimals}')
+        
+        minpriceinc = Decimal(minpriceinc)
+        print(f'Inside Adjust_increment: min price inc: {minpriceinc},' +
+              f' number of decimals allowed: {min_price_decimals}\n\n')
+        print(f' Type of min_price_decimals: {type(min_price_decimals)}')
         
         deci = price - math.floor(price)
         if deci == 0:
             adjusted_price = price
-            print(f'deci - adjusted price is price: {price}')
+            print(f'\n Deci - adjusted price is price: {price}')
             return adjusted_price 
+        
+        remainder = Decimal(deci) % minpriceinc
+        # type of minprice in is float by default?
+        print(f'Type of minpriceinc {type(minpriceinc)}, deci: {type(deci)}\n')
+        print(f'Type of remainder {type(remainder)}\n')
 
-        remainder = deci % minpriceinc 
         if remainder == 0.0: # we are at no remainder so obeys step. 
             adjusted_price = price
             print(f'remainder - adjusted price is price: {price}')
@@ -106,22 +122,40 @@ def adjust_increment(price, minpriceinc):
 def bounded_size(size, minsize, maxsize, minsizeinc):
     try:
         adjusted_size = size
-        print(f">> \nBounded_size - input size (float): {adjusted_size}, Minsize {minsize}," + 
-              f"Maxsize {maxsize}, minsizeinc {minsizeinc}")
+        min_sizeinc = minsizeinc
+        min_size = minsize
 
-        if size < maxsize and size > minsize:
+        print(f">> \nBounded_size - input size (float): {adjusted_size}," +
+              f"Minsize {minsize}," + 
+              f"Maxsize {maxsize}, minsizeinc {minsizeinc}\n")
+        
+        if 'e' in str(minsizeinc):
+            min_sizeinc = Decimal(locale.format_string("%f",minsizeinc))
+        if 'e' in str(minsize):
+            min_size = Decimal(locale.format_string("%f", minsize))
+
+        minsizeinc_decimals = len(str(min_sizeinc).split(".")[1])
+        print(f'\n minsize_inc decimals: {minsizeinc_decimals}')
+        print(f'\n min_sizeinc: {min_sizeinc}, min_size: {min_size}\n')
+
+        if size < maxsize and size > min_size:
             print("adjusted size within bounds, ok")
             adjusted_size = size
-        elif size <= minsize:
+        elif size <= min_size:
             print("make minsize adjusted size")
-            adjusted_size = minsize
+            adjusted_size = min_size
         elif size >= maxsize:
             print("make adjusted_size maxsize")
             adjusted_size = maxsize
-        print(f'\n>> post switch adjusted_size: {adjusted_size}')   
+        print(f'\n>> post switch adjusted_size: {adjusted_size}')
+        # min size decimals 
         
-        bounded_size = round_up(float(adjusted_size), float(minsizeinc))
-        print(f'>> Bounded Adjusted Size: {adjusted_size}\n')
+        #bounded_size = round_up(float(adjusted_size), float(min_sizeinc))
+        bounded_size = round_up(Decimal(adjusted_size), Decimal(min_sizeinc))
+        print(f'>> Bounded Adjusted Size: {bounded_size}, minsize: {min_sizeinc}')
+        bounded_size = round(bounded_size, minsizeinc_decimals)
+        print(f'\n bounded size rounded off : {bounded_size}')
+        
         return bounded_size
     except Exception as e:
         print(f'Exception in bounded_size: {e}')
@@ -135,11 +169,12 @@ headers = {
 }
 BTSE_Endpoint = 'https://testapi.btse.io/spot'
 
+
 def get_one_market(params, size, price):
     try:
         mkt = requests.get(BTSE_Endpoint+'/api/v3.2/market_summary', 
                            params=params, 
-                           headers = headers)
+                           headers=headers)
         mkt_info = mkt.json()
         info = mkt_info[0]
         minsize = info['minOrderSize']
@@ -148,11 +183,13 @@ def get_one_market(params, size, price):
         minpriceinc = info['minPriceIncrement']
         minvalidprice =  info['minValidPrice']
 
-        print(f'\nMin Price Increment: {minpriceinc}, min valid price: {minvalidprice}')
+        print(f'Min Price Increment: {minpriceinc}, min valid price: {minvalidprice}')
+        print(f'Type of minpriceinc {type(minpriceinc)}, price: {type(price)}\n')
 
         adjusted_price = adjust_increment(price, minpriceinc)
         final_size = bounded_size(size, minsize, maxsize, minsizeinc)
         return adjusted_price, final_size
+    
     except Exception as e:
         return e
 
@@ -176,13 +213,3 @@ if __name__ == "__main__":
     msg = get_status_msg(code)
     print(f'Status message from code: {msg}')
     
-
-'''    
-    symbol = 'BTC-USD'    
-    print(symbol)
-    base = get_base(symbol)
-    print(base)
-    quote = get_quote(symbol)
-    print(quote)
-    
-'''

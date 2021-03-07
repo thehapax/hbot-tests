@@ -25,9 +25,8 @@ print(f'url: {url}')
 
 pp = pprint.PrettyPrinter(indent=4)
 
-symbol = 'ETH-USDT'
-open_order_params = {'symbol': f'{symbol}'}
-# open_order_params = {'symbol': 'BTC-USDT'}
+#symbol = 'BTC-USDT'
+#open_order_params = {'symbol': f'{symbol}'}
 
 # Other Examples
 # open_order_params = {'symbol': 'BTC-USDT', 'orderID': 'd79e9511-4139-4cae-b020-8309f3658d89'}
@@ -87,7 +86,7 @@ async def get_openorders(client, url, params):
 
 
 async def main():
-    symbol = 'ETH-USDT' # default or take from command line
+    symbol = 'BTC-USDT' # default or take from command line
     if len(sys.argv[1:]) != 0:
         symbol = sys.argv[1]
         print(f'\n\nSymbol is: {symbol}')

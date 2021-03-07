@@ -96,7 +96,7 @@ async def cancel_orders(client,
         url = BTSE_Endpoint+path
         async with client.request('delete', url=url, params=params, headers=headers) as response:
             r = await response.text()
-            print(" cancelling order ..... \n")
+            print(" cancelling order .....  \n")
             print(r)
             return r
     except Exception as e:
@@ -138,7 +138,7 @@ async def place_orders():
 async def run(r):
     # place 2 limit orders, get all open orders, cancel all open orders
     tasks = []
-    await place_orders()
+    #await place_orders()
     async with aiohttp.ClientSession() as session:
         # get all open orders, including the two above
         task = asyncio.ensure_future(get_openorders(client=session, path=path, params=open_order_params))
@@ -146,7 +146,7 @@ async def run(r):
         responses = await asyncio.gather(*tasks)
         print(f'length of responses: {len(responses)} \n\n')
         print(responses)
-        print(f'end of length of responses')
+        print(f'end of length of responses\n\n')
         # cancel all open orders
         await cancel_all_orders(session, responses)
         await session.close()

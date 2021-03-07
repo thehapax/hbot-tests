@@ -1,10 +1,10 @@
-import requests
-import json
+#import requests
+#import json
 import aiohttp, asyncio
 from decimal import Decimal
 from utils import get_status_msg
-from btseauth_spot import BTSE_Endpoint, make_headers, get_tracking_nonce
-from get_market import get_a_market
+from btseauth_spot import BTSE_Endpoint, get_tracking_nonce
+# from get_market import get_a_market
 from utils import get_one_market
 import time 
 import sys
@@ -31,6 +31,7 @@ def limit_order_r(order_form):
   return r.text
 '''
 
+# get parsed result from limit order response
 def get_parsed(parsed):
   print(f'\nParsed:\n {parsed}')
   msg = None
@@ -67,17 +68,23 @@ async def main():
   size = 0.5
 
   symbol = 'BTC-USDT'
-  price = 37050
-  size = 0.002
+  #price = '44786.5'
+  #size = '0.00013'
+  
+  # size = Decimal(0.000123456)
+  # size = Decimal('0.00013000000000000002')
+  
+  size = Decimal(0.00013000000000000002)
+  price =  Decimal(44786.489862732783706125)
 
   if len(sys.argv[1:]) != 0:
         symbol = sys.argv[1]
 
   # adjust size and price for BTSE
   params = {'symbol': f'{symbol}'}  
-
+  
   # option #2 get avg price from market
-  #d_amount = 0.012
+  # d_amount = 0.012
   # adjusted_price, final_size =  get_a_market(params, d_amount)
   
   # bound price based on btse requirements
@@ -100,21 +107,22 @@ async def main():
                       "txType": "LIMIT",
                       "clOrderID": f"{clientOID}"}
 
-  limit_order_form = {'symbol': 'BTC-USDT', 'side': 'BUY', 'type': 'LIMIT', 'price': '47050.000000', 
-                    'size': '0.002000', 'triggerPrice': 0, 'time_in_force': 'GTC', 'txType': 'LIMIT',
-                    'clOrderID': 'buy-BTC-USDT-1613639646009553'}
+
+
+#  limit_order_form = {'symbol': 'BTC-USDT', 'side': 'BUY', 'type': 'LIMIT', 'price': '47050.000000', 
+#                    'size': '0.002000', 'triggerPrice': 0, 'time_in_force': 'GTC', 'txType': 'LIMIT',
+#                    'clOrderID': 'buy-BTC-USDT-1613639646009553'}
 
 
   print(limit_order_form)
 
-  
   nonce = get_tracking_nonce()
   print(f'nonce: {nonce}')
   print(f'FULL URL: {url}')
   print(f'limit order form: {limit_order_form}')
   
-  headers=make_headers(path, json.dumps(limit_order_form))
-  res = await limit_order(url, params=limit_order_form, headers=headers)
+  #headers=make_headers(path, json.dumps(limit_order_form))
+  #res = await limit_order(url, params=limit_order_form, headers=headers)
 
 
 if __name__ == '__main__':
