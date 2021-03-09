@@ -91,13 +91,20 @@ async def main():
         symbol = sys.argv[1]
         print(f'\n\nSymbol is: {symbol}')
     
+    #open_order_params = {'orderID': 'fb8f9422-7c90-4f3d-a5e3-369d2dcd00dc'}
+    
+    #open_order_params =  {'clOrderID' : 'buy-BTC-USDT-1613639646009553'} 
+    # # only returns 1, while trade_history returns 6
+    
     open_order_params = {'symbol': f'{symbol}'}
+    
     print(f'PARAMS: {open_order_params}\n') 
 
     async with aiohttp.ClientSession() as session:
         response = await get_openorders(client=session, url=url, params=open_order_params)
         print("\n")
         print(f'response: {response}')
+        print(f'\nlength of response: {len(response)}')
         print(f'\nGet parameters from response that are needed for cancelling orders:\n')
         pairs = get_cancelparams(response)
         print(pairs)

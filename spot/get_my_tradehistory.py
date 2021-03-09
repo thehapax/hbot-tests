@@ -77,6 +77,26 @@ params = {'orderID': '2859d157-b6d3-4607-99ff-cfd19e85f6b2'}
 
 params = {'orderID': '54209b88-714c-4aa0-a4e1-c8aa7f91fc71'}
 
+params = {'orderID': 'abad8f10-31ac-432d-a580-6b467e1ca0c2'}
+params =  {'orderID': 'abad8f10-31ac-432d-a580-6b467e1ca0c2', 'startTime': 1615190714}
+
+params = {'symbol': 'BTC-USDT'}
+
+
+#params = {'orderID': 'b4c91383-c291-47c1-a3f6-d41531d87d0c'}
+
+params = {"orderID":"db931935-541c-4201-97a6-99320a0af385"}
+
+#params = {'orderID': '2859d157-b6d3-4607-99ff-cfd19e85f6b2'}
+
+params = { 'orderID': 'a01416b4-96b7-429e-8ed4-33ee8bf06d0a'}  # this works
+params = {'orderID': 'fb8f9422-7c90-4f3d-a5e3-369d2dcd00dc'}
+
+#params = {'clOrderID': '1741a782-588d-4bf3-8e5a-05f04c760a47' }  #'startTime': 1615190714}
+params = {'clOrderID' : 'buy-BTC-USDT-1613639646009553'} # 6 results for this 1 cl ID
+
+
+
 fullpath = BTSE_Endpoint+path
 print(f'REST API: {fullpath}')
 print(f'Params: {params}')
@@ -88,4 +108,6 @@ r = requests.get(fullpath,
 
 result = r.json()
 pp.pprint(result)
+
+print(f'\n length of result {len(result)}')
 

@@ -79,7 +79,6 @@ async def main():
         ask_price = Decimal(mid_price) * Decimal("1.0492431474884933")
         print(f'\n Away from mid-price bid: {bid_price}, ask : {ask_price}, mid : {mid_price}\n')
 
-        
         limit_order_form = setup_order(params, amount, bid_price, 'BUY')
         #execute_order(limit_order_form)
 

@@ -10,3 +10,7 @@ order_result = [{'status': 2, 'symbol': 'BTC-USDT', 'orderType': 76,
 
 order_id = order_result[0]['orderID']
 print(f'order_id: {order_id}')
+
+
+amt = 0.000123456
+bid_price =  44786.489862732783706125
